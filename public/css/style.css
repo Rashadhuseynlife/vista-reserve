@@ -158,13 +158,19 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--line);
   background: rgba(30, 24, 18, 0.6);
   backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
   z-index: 20;
+}
+
+@media (min-width: 640px) {
+  .topbar { padding: 18px 28px; }
 }
 
 .brand {
@@ -202,14 +208,18 @@ main.layout {
 }
 
 @media (max-width: 920px) {
-  main.layout { grid-template-columns: 1fr; }
+  main.layout { grid-template-columns: 1fr; padding: 16px; gap: 18px; }
 }
 
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 22px;
+  padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .panel { padding: 22px; }
 }
 
 .panel-head {
@@ -232,7 +242,7 @@ main.layout {
 .floor-plan {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   background:
     radial-gradient(circle at 50% 20%, rgba(201, 122, 61, 0.05), transparent 60%),
     var(--surface-2);
@@ -248,9 +258,6 @@ main.layout {
 .table-dot {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,6 +272,7 @@ main.layout {
   border: none;
   line-height: 1.15;
   animation: flicker 4.5s ease-in-out infinite;
+  padding: 2px;
 }
 .table-dot span.cap { font-weight: 400; opacity: 0.85; font-size: 10px; }
 
@@ -273,6 +281,39 @@ main.layout {
 .table-dot.reserved {
   background: var(--reserved);
   box-shadow: 0 0 0 4px rgba(193,88,74,0.14), 0 0 22px var(--reserved-glow);
+}
+
+/* Shape variants matching the real Vista floor plan */
+.table-dot.shape-half_circle {
+  width: 15%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50% 50% 12% 12%;
+}
+.table-dot.shape-dot {
+  width: 8.5%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  font-size: 9px;
+}
+.table-dot.shape-dot span.cap { font-size: 8px; }
+.table-dot.shape-square {
+  width: 11%;
+  aspect-ratio: 1 / 1;
+  border-radius: 22%;
+}
+.table-dot.shape-rect {
+  width: 9%;
+  height: 15%;
+  border-radius: 30%;
+}
+
+@media (max-width: 640px) {
+  .table-dot.shape-half_circle { width: 19%; }
+  .table-dot.shape-dot { width: 11%; font-size: 8px; }
+  .table-dot.shape-square { width: 14%; }
+  .table-dot.shape-rect { width: 12%; height: 19%; }
+  .table-dot { font-size: 9px; }
+  .table-dot span.cap { font-size: 8px; }
 }
 
 @keyframes flicker {

@@ -87,7 +87,7 @@ function renderFloorPlan() {
   tables.forEach((t) => {
     const match = reservations.find((r) => r.table_id === t.id && r.res_time === filterTime);
     const dot = document.createElement("button");
-    dot.className = "table-dot" + (match ? " reserved" : "");
+    dot.className = "table-dot shape-" + (t.shape || "dot") + (match ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
     dot.style.top = t.pos_y + "%";
     dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${t.capacity} nəfər</span>`;
