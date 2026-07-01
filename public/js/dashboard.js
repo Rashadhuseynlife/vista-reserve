@@ -90,6 +90,7 @@ function renderFloorPlan() {
     dot.className = "table-dot shape-" + (t.shape || "dot") + (match ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
     dot.style.top = t.pos_y + "%";
+    if (t.rotation) dot.style.setProperty("--rot", t.rotation + "deg");
     const capText = t.capacity_label || `${t.capacity} nəfər`;
     dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
     dot.title = match ? `${match.customer_name} — ${match.guests} nəfər${match.created_by ? " · qəbul edən: " + match.created_by : ""}` : "Boşdur";
