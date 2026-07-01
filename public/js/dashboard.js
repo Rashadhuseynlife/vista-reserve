@@ -92,7 +92,12 @@ function renderFloorPlan() {
     dot.style.top = t.pos_y + "%";
     if (t.rotation) dot.style.setProperty("--rot", t.rotation + "deg");
     const capText = t.capacity_label || `${t.capacity} nəfər`;
-    dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
+    if (t.shape === "dot") {
+      const shortLabel = t.name.replace(/[^0-9]/g, "") || t.name;
+      dot.innerHTML = escapeHtml(shortLabel);
+    } else {
+      dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
+    }
     dot.title = match ? `${match.customer_name} — ${match.guests} nəfər${match.created_by ? " · qəbul edən: " + match.created_by : ""}` : "Boşdur";
     dot.addEventListener("click", () => {
       if (match) {

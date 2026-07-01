@@ -290,12 +290,11 @@ main.layout {
   border-radius: 50% 50% 12% 12%;
 }
 .table-dot.shape-dot {
-  width: 6%;
+  width: 5.5%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  font-size: 8px;
+  font-size: 10px;
 }
-.table-dot.shape-dot span.cap { font-size: 7px; }
 .table-dot.shape-square {
   width: 9%;
   aspect-ratio: 1 / 1;
@@ -309,7 +308,7 @@ main.layout {
 
 @media (max-width: 640px) {
   .table-dot.shape-half_circle { width: 16%; }
-  .table-dot.shape-dot { width: 7.5%; font-size: 7px; }
+  .table-dot.shape-dot { width: 6.5%; font-size: 9px; }
   .table-dot.shape-square { width: 11%; }
   .table-dot.shape-rect { width: 9.5%; height: 15%; }
   .table-dot { font-size: 8.5px; }
