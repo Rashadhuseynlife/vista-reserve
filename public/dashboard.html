@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista — Rezervasiyalar</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="display">Vista</span>
+      <span class="tag">Rezervasiyalar</span>
+    </div>
+    <div class="date-nav">
+      <button class="nav-btn" id="prevDay">‹</button>
+      <input type="date" id="datePicker" />
+      <button class="nav-btn" id="nextDay">›</button>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span id="staffLabel" style="color: var(--text-muted); font-size: 13px;"></span>
+      <button class="btn btn-ghost" id="logoutBtn">Çıxış</button>
+    </div>
+  </div>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Masa planı</h2>
+        <div class="time-filter">
+          Saat:
+          <select id="timeFilter"></select>
+        </div>
+      </div>
+      <div class="floor-plan" id="floorPlan"></div>
+      <div class="legend">
+        <span><span class="dot available"></span>Boşdur</span>
+        <span><span class="dot reserved"></span>Rezerv olunub</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Günün siyahısı</h2>
+        <button class="btn btn-primary" id="newResBtn">+ Yeni rezervasiya</button>
+      </div>
+      <div class="agenda-list" id="agendaList"></div>
+    </section>
+  </main>
+
+  <!-- Reservation modal -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal">
+      <h3 id="modalTitle">Yeni rezervasiya</h3>
+      <div class="sub" id="modalSub">Məlumatları doldurun</div>
+      <div class="form-grid">
+        <div>
+          <label>Müştərinin adı</label>
+          <input type="text" id="f_name" placeholder="Ad Soyad" />
+        </div>
+        <div>
+          <label>Telefon</label>
+          <input type="tel" id="f_phone" placeholder="+994 ..." />
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Tarix</label>
+            <input type="date" id="f_date" />
+          </div>
+          <div>
+            <label>Saat</label>
+            <input type="time" id="f_time" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Neçə nəfər</label>
+            <input type="number" id="f_guests" min="1" value="2" />
+          </div>
+          <div>
+            <label>Masa</label>
+            <select id="f_table"></select>
+          </div>
+        </div>
+        <div>
+          <label>Xüsusi qeyd</label>
+          <textarea id="f_note" rows="2" placeholder="Doğum günü, tərcih olunan yer və s."></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger hidden" id="cancelResBtn">Rezervasiyanı ləğv et</button>
+        <button class="btn btn-ghost" id="modalCloseBtn">Bağla</button>
+        <button class="btn btn-primary" id="modalSaveBtn">Yadda saxla</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

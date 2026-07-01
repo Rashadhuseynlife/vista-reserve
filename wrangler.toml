@@ -1,0 +1,12 @@
+name = "vista-reserve"
+main = "src/index.js"
+compatibility_date = "2026-06-30"
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vista_reserve_db"
+database_id = "fe8474e8-2d58-4841-827c-c4f8dbeb5e33"
