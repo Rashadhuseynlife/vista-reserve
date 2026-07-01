@@ -10,9 +10,10 @@
   <div class="login-wrap">
     <div class="login-card">
       <div class="eyebrow">Cocktail Bar</div>
-      <h1 class="display">Vista</h1>
+      <img src="/assets/Icon%20White.png" alt="Vista" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';" />
+      <h1 class="display" id="fallbackTitle" style="display:none;">Vista</h1>
       <form id="loginForm">
-        <input type="text" id="staffName" placeholder="Adınız (məs. Elvin)" autocomplete="off" />
+        <input type="text" id="staffName" placeholder="Adınız (məs. Elvin)" autocomplete="off" required />
         <input type="password" id="password" placeholder="Şifrə" autocomplete="current-password" required />
         <div class="error" id="errorMsg"></div>
         <button type="submit" class="btn btn-primary" style="margin-top: 6px;">Daxil ol</button>

@@ -90,8 +90,8 @@ function renderFloorPlan() {
     dot.className = "table-dot" + (match ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
     dot.style.top = t.pos_y + "%";
-    dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${t.capacity} kişi</span>`;
-    dot.title = match ? `${match.customer_name} — ${match.guests} nəfər` : "Boşdur";
+    dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${t.capacity} nəfər</span>`;
+    dot.title = match ? `${match.customer_name} — ${match.guests} nəfər${match.created_by ? " · qəbul edən: " + match.created_by : ""}` : "Boşdur";
     dot.addEventListener("click", () => {
       if (match) {
         openModal(match);
@@ -124,7 +124,7 @@ function renderAgenda() {
       <div class="time">${r.res_time}</div>
       <div class="info">
         <div class="name">${escapeHtml(r.customer_name)} · ${r.guests} nəfər</div>
-        <div class="meta">${table ? escapeHtml(table.name) : "?"} ${r.phone ? "· " + escapeHtml(r.phone) : ""} ${r.note ? "· " + escapeHtml(r.note) : ""}</div>
+        <div class="meta">${table ? escapeHtml(table.name) : "?"} ${r.phone ? "· " + escapeHtml(r.phone) : ""} ${r.note ? "· " + escapeHtml(r.note) : ""} ${r.created_by ? "· qəbul edən: " + escapeHtml(r.created_by) : ""}</div>
       </div>
     `;
     item.addEventListener("click", () => openModal(r));
@@ -139,7 +139,7 @@ function populateTableSelect() {
   tables.forEach((t) => {
     const opt = document.createElement("option");
     opt.value = t.id;
-    opt.textContent = `${t.name} (${t.capacity} kişi)`;
+    opt.textContent = `${t.name} (${t.capacity} nəfər)`;
     select.appendChild(opt);
   });
 }
@@ -148,7 +148,9 @@ function openModal(reservation = null, presetTableId = null, presetTime = null) 
   editingId = reservation ? reservation.id : null;
 
   $("modalTitle").textContent = reservation ? "Rezervasiyaya bax" : "Yeni rezervasiya";
-  $("modalSub").textContent = reservation ? "Məlumatı düzəliş edin və ya ləğv edin" : "Məlumatları doldurun";
+  $("modalSub").textContent = reservation
+    ? (reservation.created_by ? `Qəbul edən: ${reservation.created_by}` : "Məlumatı düzəliş edin və ya ləğv edin")
+    : "Məlumatları doldurun";
   $("cancelResBtn").classList.toggle("hidden", !reservation);
 
   $("f_name").value = reservation ? reservation.customer_name : "";

@@ -26,18 +26,30 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 CREATE INDEX IF NOT EXISTS idx_reservations_date ON reservations(res_date);
 
--- Sample floor plan for Vista — edit names / capacity / positions to match your real layout.
+-- Vista-nın real planı: Red Hall (Masa 1-8) + Kontakt Bar (13 tək nəfərlik stul)
 -- pos_x / pos_y are percentages (0-100) placing the table dot on the floor plan.
 INSERT INTO tables (name, capacity, pos_x, pos_y) VALUES
-('Masa 1', 2, 12, 18),
-('Masa 2', 2, 12, 42),
-('Masa 3', 4, 12, 68),
-('Masa 4', 4, 34, 18),
-('Masa 5', 4, 34, 42),
-('Masa 6', 6, 34, 68),
-('Masa 7', 2, 58, 22),
-('Masa 8', 2, 58, 48),
-('Masa 9', 6, 58, 74),
-('Bar Stul 1', 1, 82, 22),
-('Bar Stul 2', 1, 82, 38),
-('VIP Bölmə', 8, 82, 68);
+-- Red Hall
+('Masa 1', 6, 49, 18),
+('Masa 2', 5, 28, 25),
+('Masa 3', 5, 17, 49),
+('Masa 4', 5, 24, 72),
+('Masa 5', 6, 45, 83),
+('Masa 6', 2, 89, 54),
+('Masa 7', 4, 89, 69),
+('Masa 8', 2, 88, 86),
+-- Kontakt Bar (tək nəfərlik stullar)
+('Bar 1', 1, 72, 58),
+('Bar 2', 1, 67, 65),
+('Bar 3', 1, 58, 70),
+('Bar 4', 1, 47, 70),
+('Bar 5', 1, 38, 65),
+('Bar 6', 1, 33, 58),
+('Bar 7', 1, 32, 49),
+('Bar 8', 1, 34, 41),
+('Bar 9', 1, 40, 34),
+('Bar 10', 1, 49, 31),
+('Bar 11', 1, 57, 31),
+('Bar 12', 1, 66, 35),
+('Bar 13', 1, 72, 42);
+

@@ -128,6 +128,13 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 6px;
 }
 
+.login-card .logo-img {
+  max-width: 160px;
+  max-height: 90px;
+  margin: 4px auto 28px;
+  display: block;
+}
+
 .login-card h1 {
   font-size: 34px;
   font-style: italic;
@@ -162,10 +169,11 @@ input:focus, select:focus, textarea:focus {
 
 .brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
 }
 .brand .display { font-size: 22px; font-style: italic; }
+.brand .brand-logo { height: 30px; width: auto; display: block; }
 .brand .tag { color: var(--text-muted); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
 
 .date-nav {

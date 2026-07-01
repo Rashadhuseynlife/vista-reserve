@@ -10,7 +10,8 @@
 
   <div class="topbar">
     <div class="brand">
-      <span class="display">Vista</span>
+      <img src="/assets/Icon%20White.png" alt="Vista" class="brand-logo" onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='inline';" />
+      <span class="display" id="brandFallback" style="display:none;">Vista</span>
       <span class="tag">Rezervasiyalar</span>
     </div>
     <div class="date-nav">
@@ -85,7 +86,7 @@
         </div>
         <div>
           <label>Xüsusi qeyd</label>
-          <textarea id="f_note" rows="2" placeholder="Doğum günü, tərcih olunan yer və s."></textarea>
+          <textarea id="f_note" rows="2" placeholder="Depozit 100 AZN, doğum günü, xüsusi tərtibat və s."></textarea>
         </div>
       </div>
       <div class="modal-actions">
