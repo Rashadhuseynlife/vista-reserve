@@ -90,7 +90,8 @@ function renderFloorPlan() {
     dot.className = "table-dot shape-" + (t.shape || "dot") + (match ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
     dot.style.top = t.pos_y + "%";
-    dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${t.capacity} nəfər</span>`;
+    const capText = t.capacity_label || `${t.capacity} nəfər`;
+    dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
     dot.title = match ? `${match.customer_name} — ${match.guests} nəfər${match.created_by ? " · qəbul edən: " + match.created_by : ""}` : "Boşdur";
     dot.addEventListener("click", () => {
       if (match) {
@@ -139,7 +140,7 @@ function populateTableSelect() {
   tables.forEach((t) => {
     const opt = document.createElement("option");
     opt.value = t.id;
-    opt.textContent = `${t.name} (${t.capacity} nəfər)`;
+    opt.textContent = `${t.name} (${t.capacity_label || t.capacity + " nəfər"})`;
     select.appendChild(opt);
   });
 }

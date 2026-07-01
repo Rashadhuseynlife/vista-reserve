@@ -285,35 +285,35 @@ main.layout {
 
 /* Shape variants matching the real Vista floor plan */
 .table-dot.shape-half_circle {
-  width: 15%;
+  width: 13%;
   aspect-ratio: 1 / 1;
   border-radius: 50% 50% 12% 12%;
 }
 .table-dot.shape-dot {
-  width: 8.5%;
+  width: 7%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   font-size: 9px;
 }
 .table-dot.shape-dot span.cap { font-size: 8px; }
 .table-dot.shape-square {
-  width: 11%;
+  width: 9%;
   aspect-ratio: 1 / 1;
   border-radius: 22%;
 }
 .table-dot.shape-rect {
-  width: 9%;
-  height: 15%;
+  width: 8%;
+  height: 13%;
   border-radius: 30%;
 }
 
 @media (max-width: 640px) {
-  .table-dot.shape-half_circle { width: 19%; }
-  .table-dot.shape-dot { width: 11%; font-size: 8px; }
-  .table-dot.shape-square { width: 14%; }
-  .table-dot.shape-rect { width: 12%; height: 19%; }
-  .table-dot { font-size: 9px; }
-  .table-dot span.cap { font-size: 8px; }
+  .table-dot.shape-half_circle { width: 16%; }
+  .table-dot.shape-dot { width: 8.5%; font-size: 7.5px; }
+  .table-dot.shape-square { width: 11%; }
+  .table-dot.shape-rect { width: 9.5%; height: 15%; }
+  .table-dot { font-size: 8.5px; }
+  .table-dot span.cap { font-size: 7.5px; }
 }
 
 @keyframes flicker {
