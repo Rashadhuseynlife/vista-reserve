@@ -273,6 +273,7 @@ main.layout {
   line-height: 1.15;
   animation: flicker 4.5s ease-in-out infinite;
   padding: 2px;
+  overflow: hidden;
 }
 .table-dot span.cap { font-weight: 400; opacity: 0.85; font-size: 10px; }
 
