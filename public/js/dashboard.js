@@ -13,38 +13,17 @@ const $ = (id) => document.getElementById(id);
   const today = new Date().toISOString().slice(0, 10);
   $("datePicker").value = today;
 
-  buildTimeOptions();
   loadTables().then(loadReservations);
 
   $("prevDay").addEventListener("click", () => shiftDay(-1));
   $("nextDay").addEventListener("click", () => shiftDay(1));
   $("datePicker").addEventListener("change", loadReservations);
-  $("timeFilter").addEventListener("change", renderFloorPlan);
   $("newResBtn").addEventListener("click", () => openModal());
   $("modalCloseBtn").addEventListener("click", closeModal);
   $("modalSaveBtn").addEventListener("click", saveReservation);
   $("cancelResBtn").addEventListener("click", cancelReservation);
   $("logoutBtn").addEventListener("click", logout);
 })();
-
-function buildTimeOptions() {
-  const select = $("timeFilter");
-  select.innerHTML = "";
-  for (let h = 12; h <= 25; h++) {
-    for (let m = 0; m < 60; m += 30) {
-      const hour = h % 24;
-      const label = `${String(hour).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-      const opt = document.createElement("option");
-      opt.value = label;
-      opt.textContent = label;
-      select.appendChild(opt);
-    }
-  }
-  // default to current time rounded to nearest 30 min, fallback 19:00
-  const now = new Date();
-  const rounded = `${String(now.getHours()).padStart(2, "0")}:${now.getMinutes() < 30 ? "00" : "30"}`;
-  select.value = [...select.options].some((o) => o.value === rounded) ? rounded : "19:00";
-}
 
 function shiftDay(delta) {
   const d = new Date($("datePicker").value);
@@ -82,12 +61,12 @@ function handleAuth(res) {
 function renderFloorPlan() {
   const plan = $("floorPlan");
   plan.innerHTML = "";
-  const filterTime = $("timeFilter").value;
 
   tables.forEach((t) => {
-    const match = reservations.find((r) => r.table_id === t.id && r.res_time === filterTime);
+    const matches = reservations.filter((r) => r.table_id === t.id);
+    const match = matches[0];
     const dot = document.createElement("button");
-    dot.className = "table-dot shape-" + (t.shape || "dot") + (match ? " reserved" : "");
+    dot.className = "table-dot shape-" + (t.shape || "dot") + (matches.length ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
     dot.style.top = t.pos_y + "%";
     if (t.rotation) dot.style.setProperty("--rot", t.rotation + "deg");
@@ -98,12 +77,16 @@ function renderFloorPlan() {
     } else {
       dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
     }
-    dot.title = match ? `${match.customer_name} — ${match.guests} nəfər${match.created_by ? " · qəbul edən: " + match.created_by : ""}` : "Boşdur";
+    dot.title = matches.length
+      ? matches.map((m) => `${m.res_time} — ${m.customer_name} (${m.guests} nəfər)`).join(" | ")
+      : "Boşdur";
     dot.addEventListener("click", () => {
-      if (match) {
+      if (matches.length === 1) {
         openModal(match);
+      } else if (matches.length > 1) {
+        openModal(match); // ilk rezervasiyanı açır; qalanları "Günün siyahısı"nda görünür
       } else {
-        openModal(null, t.id, filterTime);
+        openModal(null, t.id);
       }
     });
     plan.appendChild(dot);
@@ -151,7 +134,7 @@ function populateTableSelect() {
   });
 }
 
-function openModal(reservation = null, presetTableId = null, presetTime = null) {
+function openModal(reservation = null, presetTableId = null) {
   editingId = reservation ? reservation.id : null;
 
   $("modalTitle").textContent = reservation ? "Rezervasiyaya bax" : "Yeni rezervasiya";
@@ -163,7 +146,7 @@ function openModal(reservation = null, presetTableId = null, presetTime = null) 
   $("f_name").value = reservation ? reservation.customer_name : "";
   $("f_phone").value = reservation ? reservation.phone || "" : "";
   $("f_date").value = reservation ? reservation.res_date : $("datePicker").value;
-  $("f_time").value = reservation ? reservation.res_time : (presetTime || "19:00");
+  $("f_time").value = reservation ? reservation.res_time : "19:00";
   $("f_guests").value = reservation ? reservation.guests : 2;
   $("f_table").value = reservation ? reservation.table_id : (presetTableId || (tables[0] && tables[0].id));
   $("f_note").value = reservation ? reservation.note || "" : "";
