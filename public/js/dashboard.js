@@ -48,6 +48,44 @@ async function loadReservations() {
   reservations = await res.json();
   renderFloorPlan();
   renderAgenda();
+  loadUpcomingStrip();
+}
+
+const AZ_MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "İyun", "İyul", "Avq", "Sen", "Okt", "Noy", "Dek"];
+
+async function loadUpcomingStrip() {
+  const res = await fetch("/api/reservations", { credentials: "include" });
+  if (!handleAuth(res)) return;
+  const all = await res.json();
+  const counts = {};
+  all.forEach((r) => {
+    counts[r.res_date] = (counts[r.res_date] || 0) + 1;
+  });
+  renderUpcomingStrip(counts);
+}
+
+function renderUpcomingStrip(counts) {
+  const strip = $("upcomingStrip");
+  strip.innerHTML = "";
+  const selected = $("datePicker").value;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < 21; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const pill = document.createElement("button");
+    pill.className = "day-pill" + (iso === selected ? " active" : "");
+    const count = counts[iso] || 0;
+    pill.innerHTML = `<div class="num">${d.getDate()}</div><div class="mon">${AZ_MONTHS[d.getMonth()]}</div>${count ? `<div class="dot" title="${count} rezervasiya"></div>` : ""}`;
+    pill.title = count ? `${count} rezervasiya` : "Boşdur";
+    pill.addEventListener("click", () => {
+      $("datePicker").value = iso;
+      loadReservations();
+    });
+    strip.appendChild(pill);
+  }
 }
 
 function handleAuth(res) {

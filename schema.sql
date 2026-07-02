@@ -46,19 +46,20 @@ INSERT INTO tables (name, capacity, capacity_label, pos_x, pos_y, shape, rotatio
 ('Masa 7', 4, NULL, 88, 56, 'rect', 0),
 ('Masa 8', 2, NULL, 88, 80, 'square', 0),
 -- Kontakt Bar (tək nəfərlik stullar, sağda giriş üçün boşluq — Bar13 ilə Bar1 arasında)
-('Bar 1', 1, NULL, 69, 44, 'dot', 0),
-('Bar 2', 1, NULL, 64, 37, 'dot', 0),
-('Bar 3', 1, NULL, 57, 33, 'dot', 0),
-('Bar 4', 1, NULL, 49, 32, 'dot', 0),
-('Bar 5', 1, NULL, 41, 36, 'dot', 0),
-('Bar 6', 1, NULL, 36, 42, 'dot', 0),
+('Bar 13', 1, NULL, 69, 44, 'dot', 0),
+('Bar 12', 1, NULL, 64, 37, 'dot', 0),
+('Bar 11', 1, NULL, 57, 33, 'dot', 0),
+('Bar 10', 1, NULL, 49, 32, 'dot', 0),
+('Bar 9', 1, NULL, 41, 36, 'dot', 0),
+('Bar 8', 1, NULL, 36, 42, 'dot', 0),
 ('Bar 7', 1, NULL, 34, 50, 'dot', 0),
-('Bar 8', 1, NULL, 36, 58, 'dot', 0),
-('Bar 9', 1, NULL, 41, 64, 'dot', 0),
-('Bar 10', 1, NULL, 49, 68, 'dot', 0),
-('Bar 11', 1, NULL, 57, 67, 'dot', 0),
-('Bar 12', 1, NULL, 64, 63, 'dot', 0),
-('Bar 13', 1, NULL, 69, 56, 'dot', 0);
+('Bar 6', 1, NULL, 36, 58, 'dot', 0),
+('Bar 5', 1, NULL, 41, 64, 'dot', 0),
+('Bar 4', 1, NULL, 49, 68, 'dot', 0),
+('Bar 3', 1, NULL, 57, 67, 'dot', 0),
+('Bar 2', 1, NULL, 64, 63, 'dot', 0),
+('Bar 1', 1, NULL, 69, 56, 'dot', 0);
+
 
 
 
