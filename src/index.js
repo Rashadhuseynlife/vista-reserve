@@ -119,6 +119,22 @@ async function cancelReservation(env, id) {
   return json({ ok: true });
 }
 
+async function purgeAllReservations(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Yanlış sorğu" }, 400);
+  }
+
+  if (!body.password || body.password !== env.STAFF_PASSWORD) {
+    return json({ error: "Şifrə yanlışdır" }, 401);
+  }
+
+  await env.DB.prepare(`UPDATE reservations SET status = 'cancelled' WHERE status = 'active'`).run();
+  return json({ ok: true });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -141,6 +157,8 @@ export default {
       const idMatch = path.match(/^\/api\/reservations\/(\d+)$/);
       if (idMatch && method === "PUT") return updateReservation(request, env, idMatch[1]);
       if (idMatch && method === "DELETE") return cancelReservation(env, idMatch[1]);
+
+      if (path === "/api/reservations/purge" && method === "POST") return purgeAllReservations(request, env);
 
       return json({ error: "Tapılmadı" }, 404);
     }

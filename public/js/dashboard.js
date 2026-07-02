@@ -23,6 +23,7 @@ const $ = (id) => document.getElementById(id);
   $("modalSaveBtn").addEventListener("click", saveReservation);
   $("cancelResBtn").addEventListener("click", cancelReservation);
   $("logoutBtn").addEventListener("click", logout);
+  $("purgeAllBtn").addEventListener("click", purgeAllReservations);
 })();
 
 function shiftDay(delta) {
@@ -219,6 +220,32 @@ async function logout() {
   await fetch("/api/auth", { method: "DELETE", credentials: "include" });
   localStorage.removeItem("vista_staff_name");
   window.location.href = "/index.html";
+}
+
+async function purgeAllReservations() {
+  const sure = confirm("DİQQƏT: Bütün tarixlər üzrə BÜTÜN rezervasiyalar silinəcək. Bu geri qaytarıla bilməz. Davam edək?");
+  if (!sure) return;
+
+  const password = prompt("Təsdiq üçün şifrəni yenidən yazın:");
+  if (!password) return;
+
+  const res = await fetch("/api/reservations/purge", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ password }),
+  });
+
+  if (!handleAuth(res)) return;
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    showToast(data.error || "Şifrə yanlışdır");
+    return;
+  }
+
+  showToast("Bütün rezervasiyalar silindi");
+  loadReservations();
 }
 
 // ---------- Utils ----------
