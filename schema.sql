@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS reservations (
   customer_name TEXT NOT NULL,
   phone TEXT,
   res_date TEXT NOT NULL,      -- 'YYYY-MM-DD'
-  res_time TEXT NOT NULL,      -- 'HH:MM'
+  res_time TEXT NOT NULL,      -- 'HH:MM' başlama saatı
+  res_end_time TEXT,           -- 'HH:MM' bitmə saatı (boşdursa, başlamadan 2 saat sonra sayılır)
   guests INTEGER NOT NULL,
   table_id INTEGER NOT NULL,
   note TEXT,

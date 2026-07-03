@@ -24,6 +24,9 @@ const $ = (id) => document.getElementById(id);
   $("cancelResBtn").addEventListener("click", cancelReservation);
   $("logoutBtn").addEventListener("click", logout);
   $("purgeAllBtn").addEventListener("click", purgeAllReservations);
+  $("f_time").addEventListener("change", () => {
+    $("f_time_end").value = addHoursToTime($("f_time").value, 2);
+  });
 })();
 
 function shiftDay(delta) {
@@ -52,6 +55,27 @@ async function loadReservations() {
 }
 
 const AZ_MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "İyun", "İyul", "Avq", "Sen", "Okt", "Noy", "Dek"];
+
+function addHoursToTime(timeStr, hours) {
+  const [h, m] = timeStr.split(":").map(Number);
+  let total = (h * 60 + m + hours * 60) % (24 * 60);
+  if (total < 0) total += 24 * 60;
+  const hh = Math.floor(total / 60).toString().padStart(2, "0");
+  const mm = (total % 60).toString().padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
+// Simple same-day overlap check (does not handle windows crossing midnight)
+function findConflict(tableId, date, start, end, excludeId) {
+  return reservations.find((r) => {
+    if (r.table_id !== tableId) return false;
+    if (r.res_date !== date) return false;
+    if (excludeId && r.id === excludeId) return false;
+    const rStart = r.res_time;
+    const rEnd = r.res_end_time || addHoursToTime(r.res_time, 2);
+    return rStart < end && rEnd > start;
+  });
+}
 
 async function loadUpcomingStrip() {
   const res = await fetch("/api/reservations", { credentials: "include" });
@@ -117,7 +141,7 @@ function renderFloorPlan() {
       dot.innerHTML = `${escapeHtml(t.name)}<span class="cap">${escapeHtml(capText)}</span>`;
     }
     dot.title = matches.length
-      ? matches.map((m) => `${m.res_time} — ${m.customer_name} (${m.guests} nəfər)`).join(" | ")
+      ? matches.map((m) => `${m.res_time}–${m.res_end_time || addHoursToTime(m.res_time, 2)} — ${m.customer_name} (${m.guests} nəfər)`).join(" | ")
       : "Boşdur";
     dot.addEventListener("click", () => {
       if (matches.length === 1) {
@@ -150,7 +174,7 @@ function renderAgenda() {
     const item = document.createElement("div");
     item.className = "agenda-item";
     item.innerHTML = `
-      <div class="time">${r.res_time}</div>
+      <div class="time">${r.res_time}${r.res_end_time ? `<br><span style="font-size:10px; opacity:0.6;">–${r.res_end_time}</span>` : ""}</div>
       <div class="info">
         <div class="name">${escapeHtml(r.customer_name)} · ${r.guests} nəfər</div>
         <div class="meta">${table ? escapeHtml(table.name) : "?"} ${r.phone ? "· " + escapeHtml(r.phone) : ""} ${r.note ? "· " + escapeHtml(r.note) : ""} ${r.created_by ? "· qəbul edən: " + escapeHtml(r.created_by) : ""}</div>
@@ -186,6 +210,7 @@ function openModal(reservation = null, presetTableId = null) {
   $("f_phone").value = reservation ? reservation.phone || "" : "";
   $("f_date").value = reservation ? reservation.res_date : $("datePicker").value;
   $("f_time").value = reservation ? reservation.res_time : "19:00";
+  $("f_time_end").value = reservation ? (reservation.res_end_time || addHoursToTime(reservation.res_time, 2)) : addHoursToTime("19:00", 2);
   $("f_guests").value = reservation ? reservation.guests : 2;
   $("f_table").value = reservation ? reservation.table_id : (presetTableId || (tables[0] && tables[0].id));
   $("f_note").value = reservation ? reservation.note || "" : "";
@@ -204,6 +229,7 @@ async function saveReservation() {
     phone: $("f_phone").value.trim(),
     res_date: $("f_date").value,
     res_time: $("f_time").value,
+    res_end_time: $("f_time_end").value,
     guests: parseInt($("f_guests").value, 10),
     table_id: parseInt($("f_table").value, 10),
     note: $("f_note").value.trim(),
@@ -213,6 +239,21 @@ async function saveReservation() {
   if (!payload.customer_name || !payload.res_date || !payload.res_time || !payload.guests || !payload.table_id) {
     showToast("Bütün vacib xanaları doldurun");
     return;
+  }
+
+  if (payload.res_end_time && payload.res_end_time <= payload.res_time) {
+    showToast("Bitmə saatı başlama saatından sonra olmalıdır");
+    return;
+  }
+
+  // Yalnız seçilmiş tarixin rezervasiyaları yaddaşdadır (reservations массив),
+  // ona görə konflikt yoxlaması yalnız f_date === hazırkı yüklənmiş gün olduqda dəqiqdir.
+  if (payload.res_date === $("datePicker").value) {
+    const conflict = findConflict(payload.table_id, payload.res_date, payload.res_time, payload.res_end_time, editingId);
+    if (conflict) {
+      showToast(`Bu masada ${conflict.res_time}–${conflict.res_end_time || addHoursToTime(conflict.res_time, 2)} arası "${conflict.customer_name}" adına rezerv var`);
+      return;
+    }
   }
 
   const url = editingId ? `/api/reservations/${editingId}` : "/api/reservations";

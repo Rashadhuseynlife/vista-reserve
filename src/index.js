@@ -73,17 +73,17 @@ async function createReservation(request, env) {
     return json({ error: "Yanlış sorğu" }, 400);
   }
 
-  const { customer_name, phone, res_date, res_time, guests, table_id, note, created_by } = body;
+  const { customer_name, phone, res_date, res_time, res_end_time, guests, table_id, note, created_by } = body;
 
   if (!customer_name || !res_date || !res_time || !guests || !table_id) {
     return json({ error: "Bütün vacib xanalar doldurulmalıdır" }, 400);
   }
 
   const result = await env.DB.prepare(
-    `INSERT INTO reservations (customer_name, phone, res_date, res_time, guests, table_id, note, created_by)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO reservations (customer_name, phone, res_date, res_time, res_end_time, guests, table_id, note, created_by)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
-    .bind(customer_name, phone || null, res_date, res_time, guests, table_id, note || null, created_by || null)
+    .bind(customer_name, phone || null, res_date, res_time, res_end_time || null, guests, table_id, note || null, created_by || null)
     .run();
 
   return json({ ok: true, id: result.meta.last_row_id }, 201);
@@ -97,7 +97,7 @@ async function updateReservation(request, env, id) {
     return json({ error: "Yanlış sorğu" }, 400);
   }
 
-  const { customer_name, phone, res_date, res_time, guests, table_id, note } = body;
+  const { customer_name, phone, res_date, res_time, res_end_time, guests, table_id, note } = body;
 
   if (!customer_name || !res_date || !res_time || !guests || !table_id) {
     return json({ error: "Bütün vacib xanalar doldurulmalıdır" }, 400);
@@ -105,10 +105,10 @@ async function updateReservation(request, env, id) {
 
   await env.DB.prepare(
     `UPDATE reservations
-     SET customer_name = ?, phone = ?, res_date = ?, res_time = ?, guests = ?, table_id = ?, note = ?
+     SET customer_name = ?, phone = ?, res_date = ?, res_time = ?, res_end_time = ?, guests = ?, table_id = ?, note = ?
      WHERE id = ?`
   )
-    .bind(customer_name, phone || null, res_date, res_time, guests, table_id, note || null, id)
+    .bind(customer_name, phone || null, res_date, res_time, res_end_time || null, guests, table_id, note || null, id)
     .run();
 
   return json({ ok: true });

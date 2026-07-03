@@ -427,7 +427,8 @@ main.layout {
   font-family: 'Fraunces', serif;
   font-size: 16px;
   color: var(--accent-soft);
-  min-width: 52px;
+  min-width: 56px;
+  text-align: center;
 }
 .agenda-item .info { flex: 1; min-width: 0; }
 .agenda-item .name { font-weight: 600; font-size: 14px; overflow-wrap: break-word; }

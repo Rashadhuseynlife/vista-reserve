@@ -13,4 +13,4 @@ database_id = "fe8474e8-2d58-4841-827c-c4f8dbeb5e33"
 
 [triggers]
 # Hər bazar ertəsi saat 03:00 UTC (Azərbaycan vaxtı ilə səhər saat 07:00, UTC+4) işə düşür
-crons = ["0 3 * * 1"]
+crons = ["0 3 * * 2"]
