@@ -71,14 +71,14 @@ function renderUpcomingStrip(counts) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  for (let i = 0; i < 21; i++) {
+  for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() + i);
     const iso = d.toISOString().slice(0, 10);
     const pill = document.createElement("button");
-    pill.className = "day-pill" + (iso === selected ? " active" : "");
     const count = counts[iso] || 0;
-    pill.innerHTML = `<div class="num">${d.getDate()}</div><div class="mon">${AZ_MONTHS[d.getMonth()]}</div>${count ? `<div class="dot" title="${count} rezervasiya"></div>` : ""}`;
+    pill.className = "day-pill" + (iso === selected ? " active" : "") + (count ? " has-res" : "");
+    pill.innerHTML = `<div class="num">${d.getDate()}</div><div class="mon">${AZ_MONTHS[d.getMonth()]}</div>${count ? `<div class="badge">${count}</div>` : ""}`;
     pill.title = count ? `${count} rezervasiya` : "Boşdur";
     pill.addEventListener("click", () => {
       $("datePicker").value = iso;

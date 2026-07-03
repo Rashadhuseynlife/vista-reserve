@@ -199,6 +199,7 @@ input:focus, select:focus, textarea:focus {
 @media (min-width: 640px) { .upcoming-strip { padding: 12px 28px; } }
 
 .day-pill {
+  position: relative;
   flex: 0 0 auto;
   min-width: 50px;
   padding: 7px 8px;
@@ -214,7 +215,34 @@ input:focus, select:focus, textarea:focus {
 .day-pill:hover { border-color: var(--accent); }
 .day-pill.active { border-color: var(--accent); color: var(--text); background: rgba(201,122,61,0.12); }
 .day-pill .num { font-family: 'Fraunces', serif; font-size: 16px; color: var(--text); }
-.day-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-soft); margin: 3px auto 0; }
+
+.day-pill.has-res {
+  border-color: var(--accent-soft);
+  background: rgba(201, 122, 61, 0.16);
+  box-shadow: 0 0 14px rgba(201, 122, 61, 0.35);
+}
+.day-pill.has-res .num { color: var(--accent-soft); }
+.day-pill.has-res.active { background: var(--accent); box-shadow: 0 0 18px rgba(201, 122, 61, 0.55); }
+.day-pill.has-res.active .num,
+.day-pill.has-res.active .mon { color: #16110b; }
+
+.day-pill .badge {
+  position: absolute;
+  top: -7px;
+  right: -6px;
+  background: var(--accent);
+  color: #16110b;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  box-shadow: 0 0 0 2px var(--bg);
+}
 
 .brand {
   display: flex;
