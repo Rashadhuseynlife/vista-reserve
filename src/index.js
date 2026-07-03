@@ -167,4 +167,14 @@ export default {
     // since matching static files are served before the Worker runs).
     return env.ASSETS.fetch(request);
   },
+
+  // Runs on the cron schedule defined in wrangler.toml ([triggers] crons).
+  // Deletes reservations older than 7 days to keep the database tidy.
+  async scheduled(event, env, ctx) {
+    const cutoff = new Date();
+    cutoff.setUTCDate(cutoff.getUTCDate() - 7);
+    const cutoffStr = cutoff.toISOString().slice(0, 10); // 'YYYY-MM-DD'
+
+    await env.DB.prepare(`DELETE FROM reservations WHERE res_date < ?`).bind(cutoffStr).run();
+  },
 };
