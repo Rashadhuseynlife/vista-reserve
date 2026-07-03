@@ -13,6 +13,8 @@ const $ = (id) => document.getElementById(id);
   const today = new Date().toISOString().slice(0, 10);
   $("datePicker").value = today;
 
+  buildTimeSelectOptions($("f_time"));
+  buildTimeSelectOptions($("f_time_end"));
   loadTables().then(loadReservations);
 
   $("prevDay").addEventListener("click", () => shiftDay(-1));
@@ -22,6 +24,12 @@ const $ = (id) => document.getElementById(id);
   $("modalCloseBtn").addEventListener("click", closeModal);
   $("modalSaveBtn").addEventListener("click", saveReservation);
   $("cancelResBtn").addEventListener("click", cancelReservation);
+  $("tdCloseBtn").addEventListener("click", closeTableDetail);
+  $("tdNewBtn").addEventListener("click", () => {
+    const table = currentDetailTable;
+    closeTableDetail();
+    openModal(null, table ? table.id : null);
+  });
   $("logoutBtn").addEventListener("click", logout);
   $("purgeAllBtn").addEventListener("click", purgeAllReservations);
   $("f_time").addEventListener("change", () => {
@@ -55,6 +63,19 @@ async function loadReservations() {
 }
 
 const AZ_MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "İyun", "İyul", "Avq", "Sen", "Okt", "Noy", "Dek"];
+
+function buildTimeSelectOptions(selectEl) {
+  selectEl.innerHTML = "";
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      const label = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+      const opt = document.createElement("option");
+      opt.value = label;
+      opt.textContent = label;
+      selectEl.appendChild(opt);
+    }
+  }
+}
 
 function addHoursToTime(timeStr, hours) {
   const [h, m] = timeStr.split(":").map(Number);
@@ -127,7 +148,6 @@ function renderFloorPlan() {
 
   tables.forEach((t) => {
     const matches = reservations.filter((r) => r.table_id === t.id);
-    const match = matches[0];
     const dot = document.createElement("button");
     dot.className = "table-dot shape-" + (t.shape || "dot") + (matches.length ? " reserved" : "");
     dot.style.left = t.pos_x + "%";
@@ -144,10 +164,8 @@ function renderFloorPlan() {
       ? matches.map((m) => `${m.res_time}–${m.res_end_time || addHoursToTime(m.res_time, 2)} — ${m.customer_name} (${m.guests} nəfər)`).join(" | ")
       : "Boşdur";
     dot.addEventListener("click", () => {
-      if (matches.length === 1) {
-        openModal(match);
-      } else if (matches.length > 1) {
-        openModal(match); // ilk rezervasiyanı açır; qalanları "Günün siyahısı"nda görünür
+      if (matches.length) {
+        openTableDetail(t, matches);
       } else {
         openModal(null, t.id);
       }
@@ -183,6 +201,64 @@ function renderAgenda() {
     item.addEventListener("click", () => openModal(r));
     list.appendChild(item);
   });
+}
+
+// ---------- Table detail modal ----------
+let currentDetailTable = null;
+
+function openTableDetail(table, matches) {
+  currentDetailTable = table;
+  $("tdTitle").textContent = table.name;
+  $("tdSub").textContent = `${matches.length} rezervasiya · ${$("datePicker").value}`;
+
+  const list = $("tdList");
+  list.innerHTML = "";
+  matches
+    .slice()
+    .sort((a, b) => a.res_time.localeCompare(b.res_time))
+    .forEach((r) => {
+      const row = document.createElement("div");
+      row.className = "td-row";
+      const endTime = r.res_end_time || addHoursToTime(r.res_time, 2);
+      row.innerHTML = `
+        <div class="td-top">
+          <span class="td-time">${r.res_time}–${endTime}</span>
+          <span class="td-name">${escapeHtml(r.customer_name)} · ${r.guests} nəfər</span>
+        </div>
+        <div class="td-meta">${r.phone ? escapeHtml(r.phone) : ""} ${r.note ? "· " + escapeHtml(r.note) : ""} ${r.created_by ? "· qəbul edən: " + escapeHtml(r.created_by) : ""}</div>
+        <div class="td-actions">
+          <button class="td-edit">Redaktə et</button>
+          <button class="td-delete">Sil</button>
+        </div>
+      `;
+      row.querySelector(".td-edit").addEventListener("click", () => {
+        closeTableDetail();
+        openModal(r);
+      });
+      row.querySelector(".td-delete").addEventListener("click", async () => {
+        if (!confirm(`"${r.customer_name}" (${r.res_time}) rezervasiyasını ləğv etmək istədiyinizə əminsiniz?`)) return;
+        await deleteReservationById(r.id);
+        closeTableDetail();
+      });
+      list.appendChild(row);
+    });
+
+  $("tableDetailOverlay").classList.remove("hidden");
+}
+
+function closeTableDetail() {
+  $("tableDetailOverlay").classList.add("hidden");
+  currentDetailTable = null;
+}
+
+async function deleteReservationById(id) {
+  const res = await fetch(`/api/reservations/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!handleAuth(res)) return;
+  showToast("Rezervasiya ləğv olundu");
+  loadReservations();
 }
 
 // ---------- Modal ----------
@@ -282,17 +358,9 @@ async function saveReservation() {
 async function cancelReservation() {
   if (!editingId) return;
   if (!confirm("Bu rezervasiyanı ləğv etmək istədiyinizə əminsiniz?")) return;
-
-  const res = await fetch(`/api/reservations/${editingId}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-
-  if (!handleAuth(res)) return;
-
+  const id = editingId;
   closeModal();
-  showToast("Rezervasiya ləğv olundu");
-  loadReservations();
+  await deleteReservationById(id);
 }
 
 async function logout() {

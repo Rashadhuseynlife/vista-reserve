@@ -483,6 +483,35 @@ label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom
 
 .modal-actions .btn-danger { margin-right: auto; }
 
+.td-row {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+}
+.td-row .td-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.td-row .td-time { font-family: 'Fraunces', serif; color: var(--accent-soft); font-size: 15px; }
+.td-row .td-name { font-weight: 600; font-size: 14px; }
+.td-row .td-meta { color: var(--text-muted); font-size: 12px; margin-top: 4px; overflow-wrap: break-word; }
+.td-row .td-actions { display: flex; gap: 8px; margin-top: 10px; }
+.td-row .td-actions button {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-muted);
+}
+.td-row .td-actions button:hover { border-color: var(--accent); color: var(--text); }
+.td-row .td-actions button.td-delete:hover { border-color: var(--reserved); color: var(--reserved); }
+
 .toast {
   position: fixed;
   bottom: 24px;

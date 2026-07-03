@@ -51,6 +51,19 @@
     </section>
   </main>
 
+  <!-- Table detail modal: lists all reservations for a table -->
+  <div class="modal-overlay hidden" id="tableDetailOverlay">
+    <div class="modal">
+      <h3 id="tdTitle">Masa</h3>
+      <div class="sub" id="tdSub">Bu masanın bugünkü rezervasiyaları</div>
+      <div id="tdList" style="display:flex; flex-direction:column; gap:10px; max-height:340px; overflow-y:auto;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="tdCloseBtn">Bağla</button>
+        <button class="btn btn-primary" id="tdNewBtn">+ Yeni rezervasiya</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Reservation modal -->
   <div class="modal-overlay hidden" id="modalOverlay">
     <div class="modal">
@@ -74,11 +87,11 @@
         <div class="form-row">
           <div>
             <label>Başlama saatı</label>
-            <input type="time" id="f_time" />
+            <select id="f_time"></select>
           </div>
           <div>
             <label>Bitmə saatı</label>
-            <input type="time" id="f_time_end" />
+            <select id="f_time_end"></select>
           </div>
         </div>
         <div class="form-row">
